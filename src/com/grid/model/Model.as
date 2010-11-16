@@ -73,6 +73,13 @@ package com.grid.model {
 		public static var navBar : NavBar;
 		public static var maxImages : int;
 
+		public static const NOTES_ABOUT : String = 	"Browse any flickr account by navigating to http://setgrid.net/USERNAME<br/><br/>" +
+													"Click and drag to pan the camera.<br/>" +
+													"Click an image to zoom in, and again to zoom out<br/>" + 
+													"Use your mouse wheel for extra zooming<br/>" + 
+													"Click the title to view the image on Flickr.com<br/><br/>" + 
+													"Created by Mike Tucker ( <a href='http://mike-tucker.com'>mike-tucker.com</a> )<br/><br/>" +
+													"This project is open-source.<br/>View at <a href='https://github.com/miketucker/SetGrid'>https://github.com/miketucker/SetGrid</a>";
 		public function Model() {
 			_defaultFont = new Menlo();
 			super( );

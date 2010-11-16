@@ -3,17 +3,13 @@ package com.grid {
 	import com.grid.model.Model;
 	import com.grid.view.Background;
 	import com.grid.view.Bar;
-	import com.grid.view.Intro;
-	import com.grid.view.Notes;
 	import com.grid.view.Wall;
 	import com.grid.view.elements.NavBar;
 	import com.grid.view.elements.SortBar;
 	import com.mt.AbstractMainApp;
 	import com.mt.view.DebugView;
 
-	import flash.system.Security;
-
-	[SWF(width="800",height="600",frameRate="50",backgroundColor="#FFFFFF")]
+	[SWF(width="800",height="600",frameRate="50",backgroundColor="#000000")]
 	public class GridApp extends AbstractMainApp {
 		private var _wall : Wall;
 		private var _bar : Bar;
@@ -21,16 +17,9 @@ package com.grid {
 		private var _bg : Background;
 		private var _sortBar : SortBar;
 		private var _navBar : NavBar;
-		private const FLICKR_URL : String = "flickr.com";
-		private const CROSSDOMAIN_URL : String = "http://api.flickr.com/crossdomain.xml";
 
 		public function GridApp() {
 			Model.app = this;
-
-			Security.allowDomain(FLICKR_URL);
-			Security.loadPolicyFile(CROSSDOMAIN_URL);
-			for(var i:int = 1; i < 6; i ++)
-			Security.loadPolicyFile("http://farm"+i+".static.flickr.com/crossdomain.xml");
 
 			var flashVars : Object = this.loaderInfo.parameters;
 			if (valid(flashVars.root)) Model.config.root = flashVars.root;

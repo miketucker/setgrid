@@ -22,15 +22,16 @@ package com.grid.view {
 		private var opened : Boolean;
 		
 		private var container : Sprite;
-		private static const HEIGHT : int = 20;
-		private static const WIDTH : int = 600;
+		private static const HEIGHT : int = 200;
+		private static const WIDTH : int = 350;
 
 		public function Notes() {
 			Model.notes = this;
 			
 			addChild(container = new Sprite());
-			container.graphics.lineStyle(1);
-			container.graphics.beginFill(0xFFFFFF);
+			//container.graphics.lineStyle(1);
+			container.graphics.lineStyle(1,0x333333);
+			container.graphics.beginFill(0x000000);
 			container.graphics.drawRect(0, 0, WIDTH, HEIGHT);
 			container.addChild(t = new TextField());
 			
@@ -44,26 +45,24 @@ package com.grid.view {
 			
 			var obj:Object;
 			obj = new Object();
-			obj.color="#000000";
-			obj.fontFamily="Monaco";
-			obj.fontSize="9px";
+			obj.color="#FFFFFF";
+			obj.fontFamily= Model.fontName;
+			obj.fontSize= "10px";
 			obj.leading="2px";
 			
 			style.setStyle("p", obj);			
 			
 			obj = new Object();
-			obj.color="#0000FF";
-			obj.fontFamily="Monaco";
-			obj.fontSize="9px";
+			obj.color="#CCCCCC";
+			obj.fontFamily= Model.fontName;
+			obj.fontSize= "10px";
 			obj.leading="2px";
-			//obj.textDecoration = "underline";
 
 			style.setStyle("a", obj);			
 			t.cacheAsBitmap = true;
 			t.styleSheet = style;
 			t.antiAliasType = AntiAliasType.ADVANCED;
 			t.embedFonts = true;
-			t.text = "blah blah blah";
 			t.selectable = false;
 			t.multiline = true;
 			t.wordWrap = true;
@@ -73,33 +72,39 @@ package com.grid.view {
 			t.x = t.y = PAD;
 			t.autoSize = TextFieldAutoSize.LEFT;
 			resize();
-			close(0);
+			//close(0);
 			visible = false;
 		}
 		
 		override public function resize():void{
-			x = stage.stageWidth - WIDTH + 1;
-			y = stage.stageHeight - HEIGHT + 1;
-			y -= Model.navBar.height;
+
 		}
 
 		public function set text(str:String):void{
 			if(str){
 				t.htmlText = "<p>"+str+ "</p>";
-				open();
 			} else {
 				t.htmlText = "";
-				close();
 			}
 		}
 		
-		private function close(time:Number=1) : void {
-			TweenLite.to(container,time,{y:HEIGHT});
+		public function close(time:Number=1) : void {
+			if(!opened) return;
+			visible = false;
+			opened = false;
+			//TweenLite.to(container,time,{y:-HEIGHT});
 		}
 		
-		private function open() : void {
+		public function toggle():void{
+			if(opened) close();
+			else open();
+		}
+		
+		public function open() : void {
+			if(opened) return;
+			visible = true;
 			opened = true;
-			TweenLite.to(container,1,{y:0});
+			//TweenLite.to(container,1,{y:0});
 		}
 	}
 }

@@ -29,6 +29,7 @@ package com.grid.view {
 		private var bit_high : Bitmap;
 		
 		private static const TWEEN_SPEED : Number = .5;
+		private var _isSelected : Boolean;
 		
 		private function get pad():Number{
 			return Model.imagePad;
@@ -60,6 +61,7 @@ package com.grid.view {
 		}
 		
 		public function select() : void {
+			_isSelected = true;
 			if(!bit_high) loadHigh();
 			else 
 				TweenLite.to(bit_high,1,{alpha:1,onComplete:function():void{bit_low.alpha = 0;}});
@@ -76,7 +78,7 @@ package com.grid.view {
 		}
 		
 		public function deselect():void{
-			
+			_isSelected = false;
 			bit_low.alpha = 1;
 			if(bit_high) TweenLite.to(bit_high,TWEEN_SPEED,{alpha:0});
 		}
@@ -108,11 +110,11 @@ package com.grid.view {
 			scaleBit();
 		}
 		
-		private function addBit(content : Bitmap,smooth:Boolean=false , reorder:Boolean = false ) : Bitmap {
+		private function addBit(content : Bitmap,smooth:Boolean=false , isHigh:Boolean=false) : Bitmap {
 			content.smoothing = smooth;
 			content.alpha = 0;
 			addChild( content );
-			TweenLite.to(content,TWEEN_SPEED,{alpha:1});
+			if(_isSelected || !isHigh) TweenLite.to(content,TWEEN_SPEED,{alpha:1});
 			return content;
 		}
 

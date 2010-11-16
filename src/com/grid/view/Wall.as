@@ -63,10 +63,13 @@ package com.grid.view {
 		private function bringScreenToTop():void{
 			_holder.setChildIndex(_links, _holder.numChildren-2);
 			_holder.setChildIndex(_screen, _holder.numChildren-3);
+			TweenLite.to(_screen,1,{alpha:1});
 		}
 		
 		private function bringScreenToBottom():void{
-			_holder.setChildIndex(_screen, 0);
+			TweenLite.to(_screen,1,{alpha:0,onComplete:function():void{
+				_holder.setChildIndex(_screen, 0);
+			}});
 		}
 		
 		private function bringImageToTop(i:Image):void{
@@ -223,10 +226,6 @@ package com.grid.view {
 			_screen.graphics.beginFill(Model.backgroundColor,.8);
 			_screen.graphics.drawRect(-10000, -10000, 20000, 20000);
 			_holder.addChild(_screen);
-			_screen.addEventListener(MouseEvent.MOUSE_OVER,eScreenOver);
-			setTimeout(function():void{
-				_screen.removeEventListener(MouseEvent.MOUSE_OVER,eScreenOver);
-			},10000);
 			
 		}
 
@@ -311,7 +310,6 @@ package com.grid.view {
 		}
 
 		public function zoomOut() : void {
-			//SWFAddress.setTitle( Model.TITLE + Model.SUBTITLE );
 			activeImage = null;
 			TweenLite.to( targetScale , 1 , {x:DEFAULT_ZOOM} );
 		}

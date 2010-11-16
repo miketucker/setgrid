@@ -24,7 +24,7 @@ package com.grid.view.elements {
 			_align = align;
 			tf.color = color;
 			tf.size = Model.fontSize;
-			tf.letterSpacing = .5;
+			tf.letterSpacing = 1;
 			t.defaultTextFormat = tf;
 			t.antiAliasType = AntiAliasType.ADVANCED;
 			t.embedFonts = true;

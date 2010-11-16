@@ -5,6 +5,7 @@ package com.grid.model {
 	import flash.events.Event;
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
+	import flash.system.Security;
 
 	/**
 	 * @author mikebook
@@ -19,8 +20,16 @@ package com.grid.model {
 		private const GRID_TAG_PREFIX : String = "grid";
 		private const DEFAULT_RATING : int = 2;
 		private var _ratingsFound : Boolean;
+		private const FLICKR_URL : String = "flickr.com";
+		private const CROSSDOMAIN_URL : String = "http://api.flickr.com/crossdomain.xml";
 
 		public function FlickrModel() {
+			
+			Security.allowDomain(FLICKR_URL);
+			Security.loadPolicyFile(CROSSDOMAIN_URL);
+			for(var i:int = 1; i < 6; i ++)
+			Security.loadPolicyFile("http://farm"+i+".static.flickr.com/crossdomain.xml");
+			
 			super();
 		}
 
@@ -32,7 +41,7 @@ package com.grid.model {
 			ul.addEventListener(Event.COMPLETE, function(e : Event) : void {
 				var x : XML = XML(ul.data);
 				loadImages(x.user.@id);
-				Model.title = x.user.username;
+				Model.title = 'SetGrid.net/'+x.user.username;
 			});
 		}
 
