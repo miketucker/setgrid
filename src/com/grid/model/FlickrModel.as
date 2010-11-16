@@ -34,17 +34,10 @@ package com.grid.model {
 				loadImages(x.user.@id);
 				Model.title = x.user.username;
 			});
-
-//			var ul : URLLoader = new URLLoader(new URLRequest('http://api.flickr.com/services/rest/?&method=flickr.people.findByUsername&api_key=' + api + '&username=' + user_id + '&format=rest'));
-//			ul.addEventListener(Event.COMPLETE, function(e : Event) : void {
-//				var x : XML = XML(ul.data);
-//				loadImages(x.user.@nsid);
-//			});
 		}
 
 		private function useSuppliedTags(tags : String) : void {
 			if (tags == null) return;
-
 			var ar : Array = tags.split(',');
 			for each (var t:String in ar) {
 				if (t.indexOf(GRID_TAG_PREFIX) == -1)
@@ -56,6 +49,7 @@ package com.grid.model {
 			var ul : URLLoader = new URLLoader(new URLRequest('http://api.flickr.com/services/rest/?&method=flickr.people.getPublicPhotos&api_key=' + _api + '&user_id=' + nsid + '&extras=tags&per_page=' + Model.maxImages + '&format=rest'));
 			ul.addEventListener(Event.COMPLETE, function(e : Event) : void {
 				var xml : XML = XML(ul.data);
+					trace(xml);
 				if (!_tags) {
 					for each (var x:XML in xml.photos.photo) {
 						parsePhotoTags(x);

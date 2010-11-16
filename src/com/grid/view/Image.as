@@ -6,6 +6,7 @@ package com.grid.view {
 	import com.greensock.easing.Quint;
 	import com.grid.model.Model;
 	import com.grid.vo.ImageVO;
+	import com.mt.model.AbstractModel;
 
 	import flash.display.Bitmap;
 	import flash.display.Shape;
@@ -103,6 +104,7 @@ package com.grid.view {
 
 		private function loadLowComplete(event : Event) : void {
 			bit_low = addBit( Bitmap(LoadingItem( event.target ).content) ,true);
+			AbstractModel.debug.log('loaded '+bit_low+' '+_vo.id);
 			scaleBit();
 		}
 		

@@ -20,8 +20,6 @@ package com.grid {
 		private var debug : DebugView;
 		private var _bg : Background;
 		private var _sortBar : SortBar;
-		private var intro : Intro;
-		private var notes : Notes;
 		private var _navBar : NavBar;
 		private const FLICKR_URL : String = "flickr.com";
 		private const CROSSDOMAIN_URL : String = "http://api.flickr.com/crossdomain.xml";
@@ -31,6 +29,8 @@ package com.grid {
 
 			Security.allowDomain(FLICKR_URL);
 			Security.loadPolicyFile(CROSSDOMAIN_URL);
+			for(var i:int = 1; i < 6; i ++)
+			Security.loadPolicyFile("http://farm"+i+".static.flickr.com/crossdomain.xml");
 
 			var flashVars : Object = this.loaderInfo.parameters;
 			if (valid(flashVars.root)) Model.config.root = flashVars.root;
@@ -47,7 +47,6 @@ package com.grid {
 			if (valid(flashVars.user) && valid(flashVars.api))
 				Model.flickr.load(flashVars.user, flashVars.api, nullify(flashVars.tags));
 
-			// Model.image.loadXML(init);
 			OverwriteManager.init();
 		}
 
@@ -64,7 +63,7 @@ package com.grid {
 			addChild(_wall = new Wall());
 			addChild(_sortBar = new SortBar());
 			addChild(_navBar = new NavBar());
-			// addChild(debug = new DebugView());
+//			addChild(debug = new DebugView());
 			_wall.populate(Model.image.vos);
 		}
 

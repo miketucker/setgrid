@@ -20,7 +20,7 @@ package com.mt.view {
 			if(stat) addChild(stats = AbstractModel.debug.stats = new Stats());
 		
 			if(log){
-				addChild(_logger = AbstractModel.debug.logger = new Logger(0,'logger',true,10));
+				addChild(_logger = AbstractModel.debug.logger = new Logger(0,'logger',true,20));
 				logger.colors = ['#000000','#666666','#999999','#FF3300','#FF0000'];
 				if(stats) logger.x = 100;
 				stage.addEventListener(KeyboardEvent.KEY_DOWN, eventKeyDown);
