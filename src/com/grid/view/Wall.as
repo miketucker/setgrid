@@ -11,10 +11,10 @@ package com.grid.view {
 	import com.mt.view.elements.AbstractSprite;
 
 	import flash.display.Sprite;
-	import flash.display.Stage;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
+	import flash.utils.setTimeout;
 
 	/**
 	 * @author mikebook
@@ -22,8 +22,8 @@ package com.grid.view {
 	public class Wall extends AbstractSprite {
 		private var grid : Grid;
 		private var imageAr : Array = [];
-		private var holder : Sprite;
-		private var holderOuter : Sprite;
+		private var _holder : Sprite;
+		private var _holderOuter : Sprite;
 		private var _activeImage : Image;
 		private var mouseIsDown : Boolean;
 		private var mouseDownPoint : Point = new Point( );
@@ -33,33 +33,51 @@ package com.grid.view {
 		private static const MIN_ZOOM : Number = .1;
 		private static const MAX_ZOOM : Number = 5;
 		private static const DEFAULT_ZOOM : Number = .2;
-		private var links : Sprite;
+		private var _links : Sprite;
 		private var trails : Object = new Object( );
-		public var instance : Wall;
 		private var activeURL : String = "";
 		private var targetScale : Point = new Point( 1 );
 		private var targetPosition : Point = new Point( );
 		private var tagDic : Object = new Object( );
 		private var linkCircle : LinkCircle;
 		private var hover : Hover;
+		private var _screen : Sprite;
 
 		public function Wall() {
-			instance = this;
-			addChild( holderOuter = new Sprite( ) );
-			holderOuter.addChild( holder = new Sprite( ) );
-			holder.addChild( links = new Sprite( ) );
+			addChild( _holderOuter = new Sprite( ) );
+			_holderOuter.addChild( _holder = new Sprite( ) );
+			_holder.addChild( _links = new Sprite( ) );
 			addChild( linkCircle = new LinkCircle( ) );
 			addChild( hover = new Hover( ) );
 			Model.hover = hover;
 			stage.addEventListener( Event.RESIZE , eResize );
 			SWFAddress.setTitle( Model.title );
-			stage.addEventListener( MouseEvent.MOUSE_DOWN , mouseDown );
+			_holder.addEventListener( MouseEvent.MOUSE_DOWN , mouseDown );
 			stage.addEventListener( MouseEvent.MOUSE_WHEEL , mouseWheel );
 			addEventListener( Event.ENTER_FRAME , eFrame );
 			SWFAddress.addEventListener( SWFAddressEvent.CHANGE , eAddressChange );
 			layout( );
 			grid = new Grid( );
 		}
+		
+		private function bringScreenToTop():void{
+			_holder.setChildIndex(_links, _holder.numChildren-2);
+			_holder.setChildIndex(_screen, _holder.numChildren-3);
+		}
+		
+		private function bringScreenToBottom():void{
+			_holder.setChildIndex(_screen, 0);
+		}
+		
+		private function bringImageToTop(i:Image):void{
+			_holder.setChildIndex(i,_holder.numChildren-1);
+		}
+
+		private function bringImageToBottom(i:Image):void{
+			_holder.setChildIndex(i,0);
+		}		
+
+		
 
 		public function selectByTag(name : String = "",id : int = 0) : void {
 			if(name == "") name = Model.image.TAG_ALL;
@@ -69,18 +87,21 @@ package com.grid.view {
 
 		public function showTag(str : String) : void {
 			TagTrail( trails[str] ).show( );
+			bringScreenToTop();
 			var i : Image;
-			for each(i in imgDic)
-				i.dim( );
+			for each(i in imgDic){
+				//i.dim( );
+				bringImageToBottom(i);
+			}
 			for each(i in tagDic[str])
-				i.undim( );
+				//i.undim( );
+				bringImageToTop(i);
 		}
 
 		public function hideTag(str : String) : void {
 			TagTrail( trails[str] ).hide( );
-			var i : Image;
-			for each(i in imgDic)
-				i.undim( );
+			bringScreenToBottom();
+			
 		}
 
 		private function eAddressChange(event : SWFAddressEvent) : void {
@@ -97,36 +118,36 @@ package com.grid.view {
 
 		private function eFrame(event : Event) : void {
 			if(mouseIsDown) {
-				velocity.x += (lastPoint.x - mouseX) * .5 * (1 / holderOuter.scaleX);
-				velocity.y += (lastPoint.y - mouseY) * .5 * (1 / holderOuter.scaleX);
+				velocity.x += (lastPoint.x - mouseX) * .5 * (1 / _holderOuter.scaleX);
+				velocity.y += (lastPoint.y - mouseY) * .5 * (1 / _holderOuter.scaleX);
 				lastPoint.x = mouseX;
 				lastPoint.y = mouseY;
 			}
-			if(int( (targetScale.x - holderOuter.scaleX) * 100 ) != 0) {
-				holderOuter.scaleX += (targetScale.x - holderOuter.scaleX) * .1;
-				holderOuter.scaleY = holderOuter.scaleX;
+			if(int( (targetScale.x - _holderOuter.scaleX) * 100 ) != 0) {
+				_holderOuter.scaleX += (targetScale.x - _holderOuter.scaleX) * .1;
+				_holderOuter.scaleY = _holderOuter.scaleX;
 			}
 			
-			if(int( (targetPosition.x - holder.x) * 100 ) != 0)
-				holder.x += (targetPosition.x - holder.x) * .1;
+			if(int( (targetPosition.x - _holder.x) * 100 ) != 0)
+				_holder.x += (targetPosition.x - _holder.x) * .1;
 				
-			if(int( (targetPosition.y - holder.y) * 100 ) != 0)
-				holder.y += (targetPosition.y - holder.y) * .1;			
+			if(int( (targetPosition.y - _holder.y) * 100 ) != 0)
+				_holder.y += (targetPosition.y - _holder.y) * .1;			
 			
 			if(Math.abs( velocity.x + velocity.y ) > 0.01) {
 				TweenLite.killTweensOf( targetPosition );
 				TweenLite.killTweensOf( targetScale );
-				holder.x -= velocity.x;
-				holder.y -= velocity.y;
-				targetPosition.x = holder.x;
-				targetPosition.y = holder.y;
+				_holder.x -= velocity.x;
+				_holder.y -= velocity.y;
+				targetPosition.x = _holder.x;
+				targetPosition.y = _holder.y;
 
 				velocity.x *= .8;
 				velocity.y *= .8;
 			}
 			
-			hover.x = mouseX + 2;
-			hover.y = mouseY - hover.height - 2;
+			hover.x = mouseX + 4;
+			hover.y = mouseY - hover.height - 4;
 		}
 
 		private function mouseWheel(event : MouseEvent) : void {
@@ -136,20 +157,16 @@ package com.grid.view {
 		}
 
 		private function mouseDown(event : MouseEvent) : void {
-			if(event.target is Stage || event.target is Image) {
-				stage.addEventListener( MouseEvent.MOUSE_UP , mouseUp );
-				mouseIsDown = true;
-				mouseDownPoint.x = lastPoint.x = mouseX;
-				mouseDownPoint.y = lastPoint.y = mouseY;
-			}
+			stage.addEventListener( MouseEvent.MOUSE_UP , mouseUp );
+			mouseIsDown = true;
+			mouseDownPoint.x = lastPoint.x = mouseX;
+			mouseDownPoint.y = lastPoint.y = mouseY;
 		}
 
 		private function checkClick() : void {
-			trace( 'check click' );
 			for each(var i:Image in imageAr) {
 				if(i.hitTestPoint( mouseX + x , mouseY + y )) {
 					var str : String = i.vo.id.toString( );
-					trace( 'hit' , str );
 					if(activeURL == str)
 						SWFAddress.setValue( '' );
 					else 
@@ -176,6 +193,7 @@ package com.grid.view {
 
 		public function populate(ar : Array) : void {
 			clear( );
+			drawScreen();			
 			
 			var i : Image;
 			tagDic[Model.image.TAG_ALL] = [];
@@ -183,7 +201,7 @@ package com.grid.view {
 				i = new Image( v );
 				i.addEventListener( MouseEvent.MOUSE_OVER , imageOver );
 				i.addEventListener( MouseEvent.MOUSE_OUT , imageOut );
-				holder.addChild( i );
+				_holder.addChild( i );
 				imageAr.push( i );
 				imgDic[i.vo.id.toString( )] = i;
 				for each(var t:String in i.vo.tags) {
@@ -195,8 +213,25 @@ package com.grid.view {
 			}
 			clearLinks( );
 			drawLinks( );
-			sortBy( Model.BAR_SORT_RATING , 0 );
+			if (Model.flickr.ratingsFound) sortBy(Model.BAR_SORT_RATING, 0);
+			else sortBy(Model.BAR_SORT_RANDOM, 0);
 			layout( );
+		}
+
+		private function drawScreen() : void {
+			_screen = new Sprite();
+			_screen.graphics.beginFill(Model.backgroundColor,.8);
+			_screen.graphics.drawRect(-10000, -10000, 20000, 20000);
+			_holder.addChild(_screen);
+			_screen.addEventListener(MouseEvent.MOUSE_OVER,eScreenOver);
+			setTimeout(function():void{
+				_screen.removeEventListener(MouseEvent.MOUSE_OVER,eScreenOver);
+			},10000);
+			
+		}
+
+		private function eScreenOver(event : MouseEvent) : void {
+			hover.text = "CLICK AND DRAG!";
 		}
 
 		private function imageOut(event : MouseEvent) : void {
@@ -215,19 +250,19 @@ package com.grid.view {
 			for(var i : int = 0; i < Model.image.tagKeys.length; i ++) {
 				t = new TagTrail( Model.image.tags[Model.image.tagKeys[i]] );
 				t.name = Model.image.tagKeys[i];
-				links.addChild( t );
+				_links.addChild( t );
 				trails[Model.image.tagKeys[i]] = t;
 			}
 		}
 
 		private function clearLinks() : void {
-			while(links.numChildren > 0)
-				links.removeChildAt( 0 );
+			while(_links.numChildren > 0)
+				_links.removeChildAt( 0 );
 		}
 
-		private function select(i : Image) : void {
+		private function select(i : Image = null) : void {
 			var zoomed : Boolean = false;
-			if(activeImage == i) {
+			if(activeImage == i || i == null) {
 				SWFAddress.setValue( '' );
 				zoomOut( );
 				return;
@@ -235,15 +270,15 @@ package com.grid.view {
 				if(activeImage) zoomed = true;
 				activeImage = i;
 										
-				//SWFAddress.setTitle( Model.TITLE + "  " + i.vo.tagsAsString );
+				bringImageToTop(i);
+				bringScreenToTop();
 				
 				i.select( );
-				var tx : int = (- activeImage.x - activeImage.centerWidth ) * holder.scaleX;
-				var ty : int = (- activeImage.y - activeImage.centerHeight) * holder.scaleY;
+				var tx : int = (- activeImage.x - activeImage.centerWidth ) * _holder.scaleX;
+				var ty : int = (- activeImage.y - activeImage.centerHeight) * _holder.scaleY;
 				var ts : Number = Model.GRID_MAX_SIZE / i.size;
 				
 				TweenLite.to( targetScale , 1 , {x:ts , ease:Linear.easeNone} );				
-				
 				TweenLite.to( targetPosition , 1 , {x:tx , y:ty , ease:Quint.easeOut} );
 				velocity.x = 0;
 				velocity.y = 0;
@@ -251,7 +286,7 @@ package com.grid.view {
 		}
 
 		public function sortBy(type : String,time : int = 1) : void {
-			
+			select();
 			
 			switch(type) {
 				case Model.BAR_SORT_RATING:
@@ -283,7 +318,7 @@ package com.grid.view {
 
 		private function clear() : void {
 			while(imageAr.length > 0) {
-				holder.removeChild( Image( imageAr.shift( ) ) );
+				_holder.removeChild( Image( imageAr.shift( ) ) );
 				trace( 'delete one' );
 			}
 		}
@@ -294,7 +329,8 @@ package com.grid.view {
 
 		public function set activeImage(val : Image) : void {
 			if(activeImage) activeImage.deselect( );
-			//linkCircle.select(val);
+			if(!val) bringScreenToBottom();
+			
 			if(Model.navBar) Model.navBar.select( val );
 			_activeImage = val;
 		}

@@ -12,6 +12,7 @@ package com.grid.view {
 
 		public function Hover() {
 			addChild(label = new Label('',0x333333));
+			label.size = 10;
 			mouseEnabled = false;
 		}
 		
@@ -25,7 +26,7 @@ package com.grid.view {
 		
 		public function set vo(val:ImageVO):void{
 			
-			text = val.tagsAsString.toUpperCase();
+			text = val.hoverLabel.toUpperCase();
 		}
 		
 		public function hide():void{

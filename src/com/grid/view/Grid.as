@@ -4,10 +4,10 @@
 	public class Grid {
 		private var _searchX : Array = [ 1,- 1,- 1,- 1 ];
 		private var _searchY : Array = [ 1,- 1,- 1, 1 ];
-		private const MIN_X : int = - 100;
-		private const MAX_X : int = 100;
-		private const MIN_Y : int = - 100;
-		private const MAX_Y : int = 100;
+		private const MIN_X : int = - 300;
+		private const MAX_X : int = 300;
+		private const MIN_Y : int = - 300;
+		private const MAX_Y : int = 300;
 
 		public function Grid() {
 		}
@@ -93,7 +93,8 @@
 			for(i = 0; i < tmpCopy.length; i ++) {
 				img = Image( tmpCopy[i] );
 				img.enable = true;
-				img.resetSize( );
+				if(random) img.size = int(Math.random() * 5 + 1);
+				else img.resetSize( );
 				setThumbOnSpiral( img , tmpGrid );
 			}
 		}

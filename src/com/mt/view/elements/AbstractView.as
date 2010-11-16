@@ -9,6 +9,7 @@ package com.mt.view.elements {
 		public function AbstractView() {
 			super( );
 			stage.addEventListener(Event.RESIZE, eResize );
+			stage.addEventListener(Event.ADDED_TO_STAGE, eResize );
 		}
 		
 		

@@ -26,11 +26,6 @@
 			<location>/Applications/FDTProfessional/plugins/com.powerflasher.fdt.shippedflex_3.3.0.4852_1000/flex/frameworks/libs/framework.swc</location>
 		</link>
 		<link>
-			<name>mt</name>
-			<type>2</type>
-			<location>/Users/mikebook/fdt/mt/src</location>
-		</link>
-		<link>
 			<name>playerglobal.swc</name>
 			<type>1</type>
 			<location>/Applications/FDTProfessional/plugins/com.powerflasher.fdt.shippedflex_3.3.0.4852_1000/flex/frameworks/libs/player/9/playerglobal.swc</location>

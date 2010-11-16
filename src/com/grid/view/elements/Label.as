@@ -19,11 +19,11 @@ package com.grid.view.elements {
 			addChild(t = new TextField());
 			tf = new TextFormat( );
 			name = str;
-			tf.font = Model.FONT_NAME;
+			tf.font = Model.fontName;
 			tf.align = align;
 			_align = align;
 			tf.color = color;
-			tf.size = 9;
+			tf.size = Model.fontSize;
 			tf.letterSpacing = .5;
 			t.defaultTextFormat = tf;
 			t.antiAliasType = AntiAliasType.ADVANCED;
@@ -35,6 +35,11 @@ package com.grid.view.elements {
 			mouseChildren = false;
 		}
 		
+		public function set size(val:int):void{
+			tf.size = val;
+			t.defaultTextFormat = tf;
+			t.text = t.text;
+		}
 		
 		
 		override public function set width(value:Number):void{

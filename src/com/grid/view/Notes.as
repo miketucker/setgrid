@@ -35,10 +35,10 @@ package com.grid.view {
 			container.addChild(t = new TextField());
 			
 			tf = new TextFormat( );
-			tf.font = Model.FONT_NAME;
+			tf.font = Model.fontName;
 			tf.align = TextFormatAlign.LEFT;
 			tf.color = 0x000000;
-			tf.size = 9;
+			tf.size = Model.fontSize;
 			tf.letterSpacing = .5;
 			style = new StyleSheet();
 			

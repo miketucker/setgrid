@@ -32,6 +32,7 @@ package com.grid.view {
 		private function get pad():Number{
 			return Model.imagePad;
 		}
+		
 
 		public function Image(v : ImageVO) {
 			_vo = v;
@@ -74,8 +75,9 @@ package com.grid.view {
 		}
 		
 		public function deselect():void{
+			
 			bit_low.alpha = 1;
-			TweenLite.to(bit_high,TWEEN_SPEED,{delay:1,alpha:0});
+			if(bit_high) TweenLite.to(bit_high,TWEEN_SPEED,{alpha:0});
 		}
 
 		private function eClick(event : MouseEvent) : void {
@@ -83,36 +85,32 @@ package com.grid.view {
 		}
 
 		private function loadHigh() : void {
-			var li : LoadingItem = Model.asset.load( Model.DIR_LG + _vo.url , _vo.url+"_high" , 100 );
-			trace('load high' , li.url.url );
+			var li : LoadingItem = Model.asset.load( _vo.urlHigh , "high_" +  _vo.id , 100 );
 			li.addEventListener( Event.COMPLETE , loadHighComplete );
 		}
 		
 		private function loadHighComplete(event : Event) : void {
-			trace('load high complete');
-			bit_high = addBit(LoadingItem( event.target ).content,function():void{bit_low.alpha=0},true);
-			
+			bit_high = addBit(LoadingItem( event.target ).content,true,true);
 			scaleBit();
 		}
 
 		private function loadLow() : void {
 			var dir:String = Model.DIR_SM;
 			if(_vo.type == Model.IMAGE_TYPE_DIRECTIONS || _vo.type == Model.IMAGE_TYPE_LINK) dir = Model.DIR_MD;
-			
-			var li : LoadingItem = Model.asset.load( dir + _vo.url , _vo.url+"_low");
+			var li : LoadingItem = Model.asset.load( _vo.urlLow , "low_" +  _vo.id );
 			li.addEventListener( Event.COMPLETE , loadLowComplete );
 		}
 
 		private function loadLowComplete(event : Event) : void {
-			bit_low = addBit(LoadingItem( event.target ).content,null,true);
+			bit_low = addBit( Bitmap(LoadingItem( event.target ).content) ,true);
 			scaleBit();
 		}
 		
-		private function addBit(content : Bitmap,onComplete:Function=null,smooth:Boolean=false) : Bitmap {
+		private function addBit(content : Bitmap,smooth:Boolean=false , reorder:Boolean = false ) : Bitmap {
 			content.smoothing = smooth;
 			content.alpha = 0;
 			addChild( content );
-			TweenLite.to(content,TWEEN_SPEED,{alpha:1,onComplete:onComplete});
+			TweenLite.to(content,TWEEN_SPEED,{alpha:1});
 			return content;
 		}
 
@@ -164,10 +162,20 @@ package com.grid.view {
 			}
 			
 			if(bit_high){
-				bit_high.width = shape.width - pad;
-				bit_high.height = shape.height - pad * (Model.imageHeight / Model.imageWidth);
-				bit_high.x = pad * .5;
-				bit_high.y = pad * .5;
+				var r:Number = bit_high.bitmapData.width / bit_high.bitmapData.height;
+				
+				if(r < 1){
+					bit_high.width = shape.width - pad;
+					bit_high.height = bit_high.width * 1 / r;
+					bit_high.x = pad * .5;
+					bit_high.y = ((bit_high.width) - bit_high.height) * .5 + pad * .5;
+				} else {
+					bit_high.height = shape.height - pad;
+					bit_high.width = bit_high.height * r;
+					bit_high.y = pad * .5;
+					bit_high.x = ((bit_high.height) - bit_high.width) * .5 + pad * .5;
+				}
+				
 			}
 		}
 		

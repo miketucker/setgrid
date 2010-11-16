@@ -13,8 +13,8 @@ package com.grid.model {
 	public class ImageModel extends Model {
 		private var _imageXML : XML;
 		private var _voAr : Array = [];
-		private var fComplete : Function;
-		private var _tags : Object = new Object( );
+		private var _completeHandler : Function;
+		private var _tags : Object = new Object();
 		private var _tagKeys : Array = [];
 		public const TAG_ALL : String = "All";
 		private var _tagXML : XML;
@@ -23,84 +23,102 @@ package com.grid.model {
 		private var idCount : int = 0;
 
 		public function ImageModel() {
-			super( );
+			super();
+
+			_tags[TAG_ALL] = [];
+		}
+		
+		public function set completeHandler(val:Function):void{
+			_completeHandler = val;
 		}
 
 		public function loadXML(f : Function = null) : void {
-			fComplete = f;
 
 			var li : LoadingItem;
-			li = asset.load( 'nav.xml' );
-			li.addEventListener( Event.COMPLETE , tagsComplete );
-			
+			li = asset.load('nav.xml');
+			li.addEventListener(Event.COMPLETE, tagsComplete);
+		}
+
+		public function addTag(tag : String, label : String = null, description : String = null) : void {
+			if (_tagArObj[tag]) return;
+
+			var t : TagVO = new TagVO();
+			t.label = (label) ? label : tag;
+			t.tag = tag;
+			t.description = description;
+			_tagAr.push(t);
+			_tagArObj[tag] = t;
+		}
+
+		public function addImage(vo : ImageVO) : void {
+			idCount++;
+			vo.id = idCount;
+			_voAr.push(vo);
+			for each (var str:String in vo.tags) {
+				if (!_tags[str]) {
+					_tags[str] = [];
+					_tagKeys.push(str);
+				}
+				_tags[TAG_ALL].push(vo);
+				_tags[str].push(vo);
+			}
+		}
+
+		public function doneLoading() : void {
+			_tagKeys.sort();
+			_tagKeys.splice(0, 0, TAG_ALL);
+			if (_completeHandler != null) _completeHandler();
+			dispatchEvent(new Event(Event.COMPLETE, true));
 		}
 
 		private function tagsComplete(event : Event) : void {
-			_tagXML = LoadingItem( event.target ).content;
-			var t:TagVO;
-			for each(var x:XML in _tagXML.tag) {
-				t = new TagVO(x);
-				_tagAr.push(t);
-				_tagArObj[t.tag_name] = t;
-				trace('tag added',t.name,t.tag_name,t.description);
+			_tagXML = LoadingItem(event.target).content;
+			var t : TagVO;
+			for each (var x:XML in _tagXML.tag) {
+				addTag(t.tag_name, t.name, t.description);
 			}
 			var li : LoadingItem;
-			li = asset.load( 'images.xml' );
-			li.addEventListener( Event.COMPLETE , imagesComplete );
+			li = asset.load('images.xml');
+			li.addEventListener(Event.COMPLETE, imagesComplete);
 		}
 
 		private function imagesComplete(event : Event) : void {
-			_imageXML = LoadingItem( event.target ).content;
-			trace( 'load complete' );
+			_imageXML = LoadingItem(event.target).content;
+			trace('load complete');
 			var v : ImageVO;
-			var allStr : String = TAG_ALL;
-			_tags[allStr] = [];
-			
-			for each(var x:XML in _imageXML.image) {
-				idCount ++;
-				v = new ImageVO( x , idCount );
-				_voAr.push( v );
-				for each(var str:String in v.tags) {
-					if(!_tags[str]) {
-						_tags[str] = [];
-						_tagKeys.push( str );
-					}
-					_tags[allStr].push( v );
-					_tags[str].push( v );
-				}
+
+			for each (var x:XML in _imageXML.image) {
+				v = new ImageVO(x);
+				addImage(v);
 			}
-			_tagKeys.sort( );
-			_tagKeys.splice( 0 , 0 , allStr );
-			
-			if(fComplete != null) fComplete( );
-			dispatchEvent( new Event( Event.COMPLETE , true ) );
+
+			doneLoading();
+
 		}
-		
-		public function getPrevImgByTag(tag:String,img:Image):Image{
-			var n:int = 0;
-			for each(var i:ImageVO in _tags[tag]){
-				
-				if(i.img==img){
-					if(n > 0) return ImageVO(_tags[tag][n-1]).img;
+
+		public function getPrevImgByTag(tag : String, img : Image) : Image {
+			var n : int = 0;
+			for each (var i:ImageVO in _tags[tag]) {
+				if (i.img == img) {
+					if (n > 0) return ImageVO(_tags[tag][n - 1]).img;
 					else return null;
 				}
 				n++;
 			}
 			return null;
 		}
-		
-		public function getNextImgByTag(tag:String,img:Image):Image{
-			var n:int = 0;
-			for each(var i:ImageVO in _tags[tag]){
-				if(i.img==img){
-					if(n < _tags[tag].length-1) return ImageVO(_tags[tag][n+1]).img;
+
+		public function getNextImgByTag(tag : String, img : Image) : Image {
+			var n : int = 0;
+			for each (var i:ImageVO in _tags[tag]) {
+				if (i.img == img) {
+					if (n < _tags[tag].length - 1) return ImageVO(_tags[tag][n + 1]).img;
 					else return null;
 				}
 				n++;
 			}
 			return null;
 		}
-		
 
 		public function get vos() : Array {
 			return _voAr;
@@ -113,11 +131,11 @@ package com.grid.model {
 		public function get tagKeys() : Array {
 			return _tagKeys;
 		}
-		
+
 		public function get tagAr() : Array {
 			return _tagAr;
 		}
-		
+
 		public function get tagArObj() : Array {
 			return _tagArObj;
 		}
