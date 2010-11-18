@@ -28,7 +28,6 @@ package com.grid.view.elements {
 		private const TAG_SPACING : int = 10;
 		private static const Y_OFF : int = 6;
 		public function SortBar() {
-			super();
 			Model.sortBar = this;
 			addChild(bg = new Shape());
 			addChild(right = new Sprite());
@@ -66,8 +65,7 @@ package com.grid.view.elements {
 					nextX += l.width + TAG_SPACING;
 				}
 			}
-
-			resize();
+			super();
 		}
 
 		private function linkClick(event : MouseEvent) : void {

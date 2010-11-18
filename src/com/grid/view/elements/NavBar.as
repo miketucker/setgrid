@@ -38,20 +38,14 @@ package com.grid.view.elements {
 		}
 
 		public function NavBar() {
-			super();
 			Model.navBar = this;
 			addChild(bg = new Shape());
 			addChild(right = new Sprite());
 			addChild(left = new Sprite());
-
 			addChild(extra = new Sprite());
 			extra.addChild(about = new Link(Model.BAR_EXTRA_ABOUT));
-			about.addEventListener(MouseEvent.CLICK, eAboutClick);
-		
+			about.addEventListener(MouseEvent.CLICK, eAboutClick);		
 			addChild(cText = new Label('', 0xFFFFFF));
-			
-			
-			//cText.background = true;
 			cText.addEventListener(MouseEvent.CLICK, eSelectImage);
 			extra.y = left.y = right.y = cText.y = Y_OFF;
 			bg.graphics.beginFill(0x111111, 1);
@@ -72,7 +66,7 @@ package com.grid.view.elements {
 			addChild(notes = new Notes());
 			notes.y = HEIGHT;
 			notes.text = Model.NOTES_ABOUT;
-			resize();
+			super();
 		}
 
 		private function eAboutClick(event : MouseEvent) : void {

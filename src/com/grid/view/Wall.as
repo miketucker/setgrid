@@ -5,7 +5,6 @@ package com.grid.view {
 	import com.greensock.easing.Linear;
 	import com.greensock.easing.Quint;
 	import com.grid.model.Model;
-	import com.grid.view.elements.LinkCircle;
 	import com.grid.view.elements.TagTrail;
 	import com.grid.vo.ImageVO;
 	import com.mt.view.elements.AbstractSprite;
@@ -14,7 +13,6 @@ package com.grid.view {
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
-	import flash.utils.setTimeout;
 
 	/**
 	 * @author mikebook
@@ -39,7 +37,6 @@ package com.grid.view {
 		private var targetScale : Point = new Point( 1 );
 		private var targetPosition : Point = new Point( );
 		private var tagDic : Object = new Object( );
-		private var linkCircle : LinkCircle;
 		private var hover : Hover;
 		private var _screen : Sprite;
 
@@ -47,7 +44,6 @@ package com.grid.view {
 			addChild( _holderOuter = new Sprite( ) );
 			_holderOuter.addChild( _holder = new Sprite( ) );
 			_holder.addChild( _links = new Sprite( ) );
-			addChild( linkCircle = new LinkCircle( ) );
 			addChild( hover = new Hover( ) );
 			Model.hover = hover;
 			stage.addEventListener( Event.RESIZE , eResize );

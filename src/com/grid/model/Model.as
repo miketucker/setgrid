@@ -2,7 +2,6 @@ package com.grid.model {
 	import com.grid.GridApp;
 	import com.grid.view.Hover;
 	import com.grid.view.Notes;
-	import com.grid.view.elements.LinkCircle;
 	import com.grid.view.elements.NavBar;
 	import com.grid.view.elements.SortBar;
 	import com.grid.vo.ImageVO;
@@ -66,7 +65,6 @@ package com.grid.model {
 		private static var _flickr : FlickrModel;
 
 		public static var sortBar : SortBar;
-		public static var linkCircle : LinkCircle;
 		public static var notes : Notes;
 		public static var hover : Hover;
 		public static var title : String = "PROCESS";

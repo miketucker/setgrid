@@ -10,6 +10,7 @@ package com.mt.view.elements {
 			super( );
 			stage.addEventListener(Event.RESIZE, eResize );
 			stage.addEventListener(Event.ADDED_TO_STAGE, eResize );
+			resize();
 		}
 		
 		
@@ -18,7 +19,13 @@ package com.mt.view.elements {
 		}
 		
 		public function resize() : void {
-			
+			// OVERRIDE IN EXTENDED CLASSES
+		}
+		
+		override public function remove():void{
+			stage.removeEventListener(Event.RESIZE, eResize );
+			stage.removeEventListener(Event.ADDED_TO_STAGE, eResize );
+			super.remove();
 		}
 		
 		
