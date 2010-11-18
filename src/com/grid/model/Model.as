@@ -33,7 +33,7 @@ package com.grid.model {
 		public static const BAR_WIDTH : int = 0;
 		public static const BAR_MINIMUM_TAGS : int = 2;
 		public static const BAR_SORT_LABEL : String = "SORT BY";
-		public static const BAR_TAG_LABEL : String = "TOP TAGS";
+		public static const BAR_TAG_LABEL : String = "TAGS";
 		public static const BAR_SORT_RATING : String = "RATING";
 		public static const BAR_SORT_DATE : String = "DATE";
 		public static const BAR_SORT_RANDOM : String = "RANDOM";
@@ -42,8 +42,8 @@ package com.grid.model {
 		public static const BAR_EXTRA_ABOUT : String = "ABOUT";
 
 		public static const TEXT_COLOR : uint = 0xFFFFFF;
-		public static const LINK_ALPHA_DIM : Number = 0.8;
-		public static const LINK_ALPHA_UNHIGHLIGHT : Number = 0.8;
+		public static const LINK_ALPHA_DIM : Number = 0.7;
+		public static const LINK_ALPHA_UNHIGHLIGHT : Number = 0.7;
 		public static const GRID_COLUMNS : int = 10;
 		public static const GRID_MAX_SIZE : int = 7;  
 
@@ -87,7 +87,7 @@ package com.grid.model {
 		
 		
 		public static function get fontSize():int{
-			return 9;
+			return 12;
 		}
 		
 		public static function get fontName():String{
