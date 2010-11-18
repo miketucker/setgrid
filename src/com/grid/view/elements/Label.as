@@ -14,8 +14,10 @@ package com.grid.view.elements {
 		private var tf : TextFormat;
 		private var _autoSize : Boolean;
 		private var _align : String;
+		private var _background : Boolean;
+		private var _bgColor : uint = 0x000000;
 
-		public function Label(str:String,color:uint=0x999999,align:String="left",autoSize:Boolean=true) {
+		public function Label(str:String,color:uint=0x777777,align:String="left",autoSize:Boolean=true) {
 			addChild(t = new TextField());
 			tf = new TextFormat( );
 			name = str;
@@ -24,7 +26,7 @@ package com.grid.view.elements {
 			_align = align;
 			tf.color = color;
 			tf.size = Model.fontSize;
-			tf.letterSpacing = 1;
+			tf.letterSpacing = .5;
 			t.defaultTextFormat = tf;
 			t.antiAliasType = AntiAliasType.ADVANCED;
 			t.embedFonts = true;
@@ -35,10 +37,23 @@ package com.grid.view.elements {
 			mouseChildren = false;
 		}
 		
+		public function set background(val:Boolean):void{
+			_background = val;
+			drawBG();
+		}
+		
+		private function drawBG():void{
+			graphics.clear();
+			if(!_background) return;
+			graphics.beginFill(_bgColor,1);
+			graphics.drawRect(0, 0, t.width, t.height);			
+		}		
+		
 		public function set size(val:int):void{
 			tf.size = val;
 			t.defaultTextFormat = tf;
 			t.text = t.text;
+			drawBG();
 		}
 		
 		
@@ -55,10 +70,15 @@ package com.grid.view.elements {
 			t.defaultTextFormat = tf;
 			t.text = t.text;
 			if(_autoSize) t.autoSize = _align;
+			drawBG();
 		}
 		
 		public function get textFormat():TextFormat{
 			return tf;
+		}
+		
+		public function get textField():TextField{
+			return t;
 		}
 		
 		public function get text():String{
@@ -68,7 +88,16 @@ package com.grid.view.elements {
 		public function set text(str:String):void{
 			t.text = str;
 			if(_autoSize) t.autoSize = _align;
-			//t.autoSize = TextFieldAutoSize.LEFT;
+			drawBG();
+		}
+
+		public function get bgColor() : uint {
+			return _bgColor;
+		}
+
+		public function set bgColor(val : uint) : void {
+			_bgColor = val;
+			drawBG();
 		}
 	}
 }

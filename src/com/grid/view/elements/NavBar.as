@@ -4,6 +4,7 @@ package com.grid.view.elements {
 	import com.grid.view.Notes;
 	import com.mt.view.elements.AbstractView;
 
+	import flash.display.DisplayObject;
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
@@ -15,9 +16,9 @@ package com.grid.view.elements {
 	 * @author mikebook
 	 */
 	public class NavBar extends AbstractView {
-		private static const HEIGHT : int = 20;
-		private static const PAD : int = 10;
-		private static const PAD_R : int = 10;
+		private static const HEIGHT : int = 30;
+		private static const PAD : int = 12;
+		private static const PAD_R : int = 12;
 		private var bg : Shape;
 		private var right : Sprite;
 		private var left : Sprite;
@@ -25,12 +26,12 @@ package com.grid.view.elements {
 		private var leftArrow : Shape;
 		private var rightArrow : Shape;
 		private var _currentImg : Image;
-		private var _leftMask : Shape;
-		private var _rightMask : Shape;
 		private var extra : Sprite;
 		private var help : Label;
 		private var about : Label;
 		private var notes : Notes;
+		private static const Y_OFF : int = 6;
+		private var _cTextBg : Shape;
 
 		private function get c() : uint {
 			return 0x666666;
@@ -42,20 +43,17 @@ package com.grid.view.elements {
 			addChild(bg = new Shape());
 			addChild(right = new Sprite());
 			addChild(left = new Sprite());
-			_leftMask = new Shape();
-			_leftMask.graphics.beginFill(0);
-			_leftMask.graphics.drawRect(0, 0, 500, HEIGHT);
-
-			_rightMask = new Shape();
-			_rightMask.graphics.beginFill(0);
-			_rightMask.graphics.drawRect(0, 0, 500, HEIGHT);
 
 			addChild(extra = new Sprite());
 			extra.addChild(about = new Link(Model.BAR_EXTRA_ABOUT));
 			about.addEventListener(MouseEvent.CLICK, eAboutClick);
+		
 			addChild(cText = new Label('', 0xFFFFFF));
+			
+			
+			//cText.background = true;
 			cText.addEventListener(MouseEvent.CLICK, eSelectImage);
-			extra.y = left.y = right.y = cText.y = 3;
+			extra.y = left.y = right.y = cText.y = Y_OFF;
 			bg.graphics.beginFill(0x111111, 1);
 			bg.graphics.drawRect(0, 0, 500, HEIGHT);
 			bg.graphics.beginFill(0x333333, 1);
@@ -65,7 +63,8 @@ package com.grid.view.elements {
 			rightArrow = drawArrow(true);
 			leftArrow.x = PAD_R;
 			leftArrow.y = rightArrow.y = HEIGHT * .5;
-			_leftMask.x = left.x = PAD_R * 2;
+			left.x = PAD_R * 2;
+
 			extra.x = PAD;
 			addChild(leftArrow);
 			addChild(rightArrow);
@@ -79,9 +78,9 @@ package com.grid.view.elements {
 		private function eAboutClick(event : MouseEvent) : void {
 			notes.open();
 			about.removeEventListener(MouseEvent.CLICK, eAboutClick);
-			setTimeout(function():void{
+			setTimeout(function() : void {
 				stage.addEventListener(MouseEvent.CLICK, eCloseAbout);
-			},10);
+			}, 10);
 		}
 
 		private function eCloseAbout(event : MouseEvent) : void {
@@ -113,6 +112,20 @@ package com.grid.view.elements {
 			rightArrow.x = stage.stageWidth - PAD_R;
 			right.x = stage.stageWidth - PAD_R * 2;
 			cText.x = (stage.stageWidth - cText.width ) * .5;
+			
+			var i:int = 0;
+			var c:DisplayObject;
+			var w:int = stage.stageWidth/2 - (cText.width/2 + 40);
+			for(i = 0; i < right.numChildren; i++){				
+				c = right.getChildAt(i);
+				if(-c.x > w) c.visible = false;
+				else c.visible = true;
+			}
+			for(i = 0; i < left.numChildren; i++){				
+				c = left.getChildAt(i);
+				if(c.x + c.width > w) c.visible = false;
+				else c.visible = true;
+			}
 		}
 
 		private function clear() : void {
@@ -139,26 +152,26 @@ package com.grid.view.elements {
 			shape.graphics.beginFill(c);
 
 			if (_dir) {
-				shape.graphics.moveTo(- 3, - 5);
+				shape.graphics.moveTo(- Y_OFF, - 5);
 				shape.graphics.lineTo(5, 0);
-				shape.graphics.lineTo(- 3, 5);
+				shape.graphics.lineTo(- Y_OFF, 5);
 			} else {
-				shape.graphics.moveTo(3, - 5);
+				shape.graphics.moveTo(Y_OFF, - 5);
 				shape.graphics.lineTo(- 5, 0);
-				shape.graphics.lineTo(3, 5);
+				shape.graphics.lineTo(Y_OFF, 5);
 			}
 			return shape;
 		}
 
 		private function addTag(ti : Image, tag : String, doleft : Boolean = true) : void {
 			extra.visible = false;
-			
-			
 			var l : NavItem;
 			if (doleft) {
+				left.visible = true;
 				leftArrow.visible = true;
 				l = new NavItem(ti, tag);
 				if (left.width > 0) l.x = left.width + PAD;
+				trace('l',l.x,left.width,left.y,left.x);
 				left.addChild(l);
 			} else {
 				rightArrow.visible = true;
@@ -167,6 +180,7 @@ package com.grid.view.elements {
 				if (right.width > 0) l.x -= PAD;
 				right.addChild(l);
 			}
+			resize();
 		}
 	}
 }

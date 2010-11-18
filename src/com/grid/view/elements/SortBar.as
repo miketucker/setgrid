@@ -4,6 +4,7 @@ package com.grid.view.elements {
 	import com.grid.vo.TagVO;
 	import com.mt.view.elements.AbstractView;
 
+	import flash.display.DisplayObject;
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
@@ -18,14 +19,14 @@ package com.grid.view.elements {
 		private var tSortRating : Link;
 		private var tSortDate : Link;
 		private var tSortRandom : Link;
-		private static const HEIGHT : int = 20;
+		private static const HEIGHT : int = 30;
 		private var links : Array = [];
 		private var activeLink : TagLink;
 		private var right : Sprite;
-		private static const PAD_R : int = 10;
+		private static const PAD_R : int = 12;
 		private var tTopics : Label;
 		private const TAG_SPACING : int = 10;
-
+		private static const Y_OFF : int = 6;
 		public function SortBar() {
 			super();
 			Model.sortBar = this;
@@ -45,7 +46,7 @@ package com.grid.view.elements {
 			tSortRandom.addEventListener(MouseEvent.CLICK, eSortClick);
 
 			right.addChild(tTopics = new Label(Model.BAR_TAG_LABEL));
-			right.y = 3;
+			right.y = Y_OFF;
 			var nextX : int = tTopics.width + TAG_SPACING;
 			var l : TagLink;
 
@@ -113,14 +114,29 @@ package com.grid.view.elements {
 		private function addText(s : Sprite, target : Sprite = null) : void {
 			if (target) target.addChild(s);
 			else addChild(s);
-			s.y = 3;
+			s.y = Y_OFF;
 			s.x = textX;
 			textX += s.width + TAG_SPACING;
 		}
 
 		override public function resize() : void {
 			bg.width = stage.stageWidth;
-			right.x = Math.max(stage.stageWidth - right.width - PAD_R, textX + 50);
+			var c:DisplayObject;
+			var w:int = stage.stageWidth - textX - 50;
+			var lastVis:int = right.width;
+			for(var i:int = 0; i < right.numChildren; i++){				
+				c = right.getChildAt(i);
+				c.visible = true;
+				if(c.x + c.width > w){
+					c.visible = false;
+					break;
+				} else {
+					lastVis = c.x + c.width;
+				}
+			}
+			right.x = stage.stageWidth - lastVis - PAD_R;
+			
+//			right.x = Math.max(stage.stageWidth - right.width - PAD_R, textX + 50);
 			y = stage.stageHeight - HEIGHT;
 		}
 	}
