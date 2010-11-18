@@ -41,7 +41,7 @@ package com.grid.model {
 			ul.addEventListener(Event.COMPLETE, function(e : Event) : void {
 				var x : XML = XML(ul.data);
 				loadImages(x.user.@id);
-				Model.title = 'SetGrid.net/'+x.user.username;
+				Model.title = 'SetGrid.net/'+user_id;
 			});
 		}
 
@@ -58,7 +58,6 @@ package com.grid.model {
 			var ul : URLLoader = new URLLoader(new URLRequest('http://api.flickr.com/services/rest/?&method=flickr.people.getPublicPhotos&api_key=' + _api + '&user_id=' + nsid + '&extras=tags&per_page=' + Model.maxImages + '&format=rest'));
 			ul.addEventListener(Event.COMPLETE, function(e : Event) : void {
 				var xml : XML = XML(ul.data);
-					trace(xml);
 				if (!_tags) {
 					for each (var x:XML in xml.photos.photo) {
 						parsePhotoTags(x);

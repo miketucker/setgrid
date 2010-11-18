@@ -2,8 +2,8 @@
 	import com.grid.model.Model;
 
 	public class Grid {
-		private var _searchX : Array = [ 1,- 1,- 1,- 1 ];
-		private var _searchY : Array = [ 1,- 1,- 1, 1 ];
+		private var _searchX : Array = [1, - 1, - 1, - 1];
+		private var _searchY : Array = [1, - 1, - 1, 1];
 		private const MIN_X : int = - 300;
 		private const MAX_X : int = 300;
 		private const MIN_Y : int = - 300;
@@ -15,92 +15,75 @@
 		public function calculateOrdered(images : Array) : void {
 			var tmpCopy : Array = [];
 			var img : Image;
-			for each(img in images) {
-				img.resetSize( );
+			for each (img in images) {
+				img.resetSize();
 				img.enable = true;
-				if(img.size > 0) tmpCopy.push( img );
+				if (img.size > 0) tmpCopy.push(img);
 				else img.enable = false;
 			}
-				
+
 			var ts : int = 2;
 			var sx : int = - .5 * Model.GRID_COLUMNS * ts;
 			var sy : int = - .5 * (tmpCopy.length / Model.GRID_COLUMNS) * ts;
 			var nx : int = sx;
 			var ny : int = sy;
 			var max_x : int = Model.GRID_COLUMNS * ts;
-			
-			
-			
-			
-			for(var i : int = 0; i < tmpCopy.length; i ++) {
-				img = Image( tmpCopy[i] );
-				if(img.size > 0) {
+
+			for (var i : int = 0; i < tmpCopy.length; i++) {
+				img = Image(tmpCopy[i]);
+				if (img.size > 0) {
 					img.enable = true;
 					img.size = ts;
 					img.cellX = nx;
 					img.cellY = ny;
-					
+
 					nx += ts;
-					if(nx >= max_x + sx) {
+					if (nx >= max_x + sx) {
 						nx = sx;
 						ny += ts;
 					}
 				} else {
 					img.enable = false;
-				}			
+				}
 			}
 		}
 
-		public function calculuateSpiral(images : Array,random : Boolean = false) : void {
+		public function calculuateSpiral(images : Array, random : Boolean = false) : void {
 			var tmpCopy : Array = [];
 			var img : Image;
 			var targetPos : int;
-			var taken:Boolean = true;
-			
-			for each(img in images) {
-				if(random) img.size = int( Math.random( ) * (Model.GRID_MAX_SIZE ) + 1 );
-				else img.resetSize( );
-				
-				if(random){ 
+			var taken : Boolean = true;
+
+			for each (img in images) {
+				if (random) img.size = int(Math.random() * (Model.GRID_MAX_SIZE ) + 1);
+				else img.resetSize();
+
+				if (random) {
 					taken = true;
-					while(taken){
+					while (taken) {
 						targetPos = int(Math.random() * images.length);
-						if(tmpCopy[targetPos] == null){
+						if (tmpCopy[targetPos] == null) {
 							tmpCopy[targetPos] = img;
 							taken = false;
 						}
 					}
-				}else{	
-					if(img.size > 0) tmpCopy.push( img );
+				} else {
+					if (img.size > 0) tmpCopy.push(img);
 				}
-				
 			}
 
-			var tmpGrid : Object = { };
-			var i : int = tmpCopy.length;
-			/*
-			var tx:int;
-			var ty:int;
-			
-			for(i = 0; i < 2500 ; i++){
-				tx = Math.random() * MAX_X * 2 + MIN_X;
-				ty = Math.random() * MAX_Y * 2 + MIN_Y;
-				tmpGrid[tx+","+ty] = "hi";
-				trace('take',tx+","+ty);
-			}*/
-			
-			//tmpCopy.sortOn( "size" , Array.DESCENDING , Array.NUMERIC );
-			for(i = 0; i < tmpCopy.length; i ++) {
-				img = Image( tmpCopy[i] );
-				img.enable = true;
-				if(random) img.size = int(Math.random() * 5 + 1);
-				else img.resetSize( );
-				setThumbOnSpiral( img , tmpGrid );
-			}
+			var tmpGrid : Object = {};
+			for (var i : int = 0 ; i < tmpCopy.length; i++) {
+		img = Image( tmpCopy[i] );
+		img.enable = true;
+		if(random) img.size = int(Math.random() * 5 + 1);
+		else img.resetSize( );
+		setThumbOnSpiral( img , tmpGrid );
+		}
 		}
 
 		private function get random() : Boolean {
-			//return Math.floor( Math.random( ) * 100 ) == 1;
+			// return Math.floor( Math.random( ) * 100 ) == 1;
 			return true;
 		}
 
@@ -116,27 +99,25 @@
 			// spiral from the center out checking each cell when we find a cell
 			// that can contain the thumb, place it and exit
 			while ( true ) {
-				
-				while ( ++ cx <= n && cx < MAX_X && random) {
-					if ( placeThumbOnCellIfEmpty( image , cx , cy , tmpGrid ) ) return;
+				while ( ++cx <= n && cx < MAX_X && random) {
+					if ( placeThumbOnCellIfEmpty(image, cx, cy, tmpGrid) ) return;
 				}
-				-- cx;
-				while ( ++ cy <= n && cx < MAX_Y && random) {
-					if ( placeThumbOnCellIfEmpty( image , cx , cy , tmpGrid ) ) return;
+				--cx;
+				while ( ++cy <= n && cx < MAX_Y && random) {
+					if ( placeThumbOnCellIfEmpty(image, cx, cy, tmpGrid) ) return;
 				}
-				-- cy;
-				while ( -- cx >= - n && cx > MIN_X && random) {
-					if ( placeThumbOnCellIfEmpty( image , cx , cy , tmpGrid ) ) return;
+				--cy;
+				while ( --cx >= - n && cx > MIN_X && random) {
+					if ( placeThumbOnCellIfEmpty(image, cx, cy, tmpGrid) ) return;
 				}
-				++ cx;
-				while ( -- cy >= - n && cy > MIN_Y && random) {
-					if ( placeThumbOnCellIfEmpty( image , cx , cy , tmpGrid ) ) return;
+				++cx;
+				while ( --cy >= - n && cy > MIN_Y && random) {
+					if ( placeThumbOnCellIfEmpty(image, cx, cy, tmpGrid) ) return;
 				}
-				
-				++ cy;
-				
-				
-				++ n;
+
+				++cy;
+
+				++n;
 			}
 		}
 
@@ -150,14 +131,14 @@
 		 * @return
 		 */
 		private function placeThumbOnCellIfEmpty(image : Image, cx : int, cy : int, tmpGrid : Object) : Boolean {
-			if ( isCellEmpty( cx , cy , tmpGrid ) ) {
+			if ( isCellEmpty(cx, cy, tmpGrid) ) {
 				var n : int = image.size;
 				var sx : int;
 				var sy : int;
 				var si : int = - 1;
 				var emptyFound : Boolean = false;
 				mainLoop:
-				while ( ++ si <= Model.GRID_MAX_SIZE ) {
+				while ( ++si <= Model.GRID_MAX_SIZE ) {
 					sx = _searchX[i] >= 0 ? cx : cx - ( n - 1 );
 					sy = _searchY[i] >= 0 ? cy : cy - ( n - 1 );
 					var i : int = sx;
@@ -165,18 +146,18 @@
 					while ( i < sx + n ) {
 						j = sy;
 						while ( j < sy + n ) {
-							if ( ! isCellEmpty( i , j , tmpGrid ) ) {
+							if ( !isCellEmpty(i, j, tmpGrid) ) {
 								continue mainLoop;
 							}
-							++ j;
+							++j;
 						}
-						++ i;
+						++i;
 					}
 					emptyFound = true;
 					break;
 				}
 				if ( emptyFound ) {
-					placeThumbOnCell( image , sx , sy , tmpGrid );
+					placeThumbOnCell(image, sx, sy, tmpGrid);
 					return true;
 				}
 			}
@@ -200,9 +181,9 @@
 				j = cy;
 				while ( j < cy + n ) {
 					tmpGrid[i + "," + j] = image;
-					++ j;
+					++j;
 				}
-				++ i;
+				++i;
 			}
 		}
 

@@ -27,13 +27,12 @@ package com.grid.model {
 
 			_tags[TAG_ALL] = [];
 		}
-		
-		public function set completeHandler(val:Function):void{
+
+		public function set completeHandler(val : Function) : void {
 			_completeHandler = val;
 		}
 
 		public function loadXML(f : Function = null) : void {
-
 			var li : LoadingItem;
 			li = asset.load('nav.xml');
 			li.addEventListener(Event.COMPLETE, tagsComplete);
@@ -84,7 +83,6 @@ package com.grid.model {
 
 		private function imagesComplete(event : Event) : void {
 			_imageXML = LoadingItem(event.target).content;
-			trace('load complete');
 			var v : ImageVO;
 
 			for each (var x:XML in _imageXML.image) {
@@ -93,7 +91,6 @@ package com.grid.model {
 			}
 
 			doneLoading();
-
 		}
 
 		public function getPrevImgByTag(tag : String, img : Image) : Image {

@@ -7,16 +7,18 @@ package com.grid.view {
 	 */
 	public class Loading extends AbstractView {
 		private var _label : Label;
+
 		public function Loading() {
 			super();
 			fadeSpeed = 1;
 			addChild(_label = new Label('LOADING'));
 			_label.size = 16;
+			_label.x -= _label.width * .5;
+			_label.y -= _label.height * .5;
 		}
-		
-		override public function resize():void{
+
+		override public function resize() : void {
 			center();
-			trace('resize loading');
 		}
 	}
 }

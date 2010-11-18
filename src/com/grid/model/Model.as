@@ -77,7 +77,7 @@ package com.grid.model {
 													"Use your mouse wheel for extra zooming<br/>" + 
 													"Click the title to view the image on Flickr.com<br/><br/>" + 
 													"Created by Mike Tucker ( <a href='http://mike-tucker.com'>mike-tucker.com</a> )<br/><br/>" +
-													"This project is open-source.<br/>View at <a href='https://github.com/miketucker/SetGrid'>https://github.com/miketucker/SetGrid</a>";
+													"This project is open-source.<br/>View at <a href='https://github.com/miketucker/setgrid'>https://github.com/miketucker/setgrid</a>";
 		public function Model() {
 			_defaultFont = new Menlo();
 			super( );
